@@ -13,7 +13,10 @@ namespace Speakers.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Configuration.AddJsonFile("appsettings.local.json", true);
 
+            var sql = builder.Configuration.GetConnectionString("SpeakersContext");
+            
             builder.Services.AddDbContext<SpeakersContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SpeakersContext") 
                     ?? throw new InvalidOperationException("Connection string 'SpeakersContext' not found.")));
