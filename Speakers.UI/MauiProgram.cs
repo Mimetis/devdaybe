@@ -28,20 +28,27 @@ namespace Speakers.UI
             //    c.BaseAddress = new Uri("https://localhost:7170");
             //});
 
+            //builder.Services.AddHttpClient("localhost_android", c =>
+            //{
+            //    c.BaseAddress = new Uri("https://10.0.2.2:7170");
+
+            //    // Check if we are trying to reach a IIS Express.
+            //    // IIS Express does not allow any request other than localhost
+            //    // So far,hacking the Host-Content header to mimic localhost call
+
+            //    c.DefaultRequestHeaders.Host = $"localhost:7170";
+
+            //}).ConfigurePrimaryHttpMessageHandler(() =>
+            //{
+            //    HttpsClientHandlerService handler = new();
+            //    return handler.GetPlatformMessageHandler();
+            //});
+
             builder.Services.AddHttpClient("localhost_android", c =>
             {
-                c.BaseAddress = new Uri("https://10.0.2.2:7170");
+                c.BaseAddress = new Uri("https://devdaybe.servicebus.windows.net/localhost-https");
 
-                // Check if we are trying to reach a IIS Express.
-                // IIS Express does not allow any request other than localhost
-                // So far,hacking the Host-Content header to mimic localhost call
-
-                c.DefaultRequestHeaders.Host = $"localhost:7170";
-
-            }).ConfigurePrimaryHttpMessageHandler(() =>
-            {
-                HttpsClientHandlerService handler = new();
-                return handler.GetPlatformMessageHandler();
+                //c.DefaultRequestHeaders.Host = $"localhost:7170";
             });
 
             builder.Services.AddSingleton<SpeakersViewModel>();

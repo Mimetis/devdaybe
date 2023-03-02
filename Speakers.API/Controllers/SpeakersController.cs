@@ -44,7 +44,7 @@ namespace Speakers.API.Controllers
 
         // GET: api/Speakers?search=john
         [HttpGet("search")]
-        public async Task<ActionResult<IEnumerable<Speaker>>> SearchSpeaker([FromQuery]string search)
+        public async Task<ActionResult<IEnumerable<Speaker>>> SearchSpeaker([FromQuery] string search)
         {
             var speakers = await _context.Speakers.Where(
                 s => s.FirstName.Contains(search) || s.LastName.Contains(search)).ToListAsync();
