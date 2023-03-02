@@ -62,7 +62,7 @@ namespace Speakers.UI.ViewModels
             IsRefreshing = true;
             this.Speakers.Clear();
             // Create the client
-            using HttpClient client = HttpClientFactory.CreateClient("localhost_android");
+            using HttpClient client = HttpClientFactory.CreateClient("api");
 
             try
             {

@@ -23,10 +23,14 @@ namespace Speakers.UI
             //		builder.Logging.AddDebug();
             //#endif
 
-            //builder.Services.AddHttpClient("api", c =>
-            //{
-            //    c.BaseAddress = new Uri("https://localhost:7170");
-            //});
+            builder.Services.AddHttpClient("api", c =>
+            {
+                c.BaseAddress = new Uri("https://localhost:7170");
+            }).ConfigurePrimaryHttpMessageHandler(() =>
+            {
+                HttpsClientHandlerService handler = new();
+                return handler.GetPlatformMessageHandler();
+            });
 
             //builder.Services.AddHttpClient("localhost_android", c =>
             //{

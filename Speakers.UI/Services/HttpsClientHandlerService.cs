@@ -10,6 +10,7 @@ namespace Speakers.UI.Services
     {
         public HttpMessageHandler GetPlatformMessageHandler()
         {
+            var t = 1;
 #if ANDROID
             var handler = new CustomAndroidMessageHandler
             {
