@@ -29,6 +29,7 @@ namespace Speakers.UI
             }).ConfigurePrimaryHttpMessageHandler(() =>
             {
                 HttpsClientHandlerService handler = new();
+                // comments
                 return handler.GetPlatformMessageHandler();
             });
 
