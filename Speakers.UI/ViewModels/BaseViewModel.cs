@@ -18,11 +18,11 @@ namespace Speakers.UI.ViewModels
             set { SetProperty(ref isBusy, value); }
         }
 
-        string title = string.Empty;
-        public string Title
+        string vmTitle = string.Empty;
+        public string ViewModelTitle
         {
-            get { return title; }
-            set { SetProperty(ref title, value); }
+            get { return vmTitle; }
+            set { SetProperty(ref vmTitle, value); }
         }
 
         protected bool SetProperty<T>(ref T backingStore, T value,

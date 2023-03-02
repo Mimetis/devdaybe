@@ -1,4 +1,4 @@
-﻿using Microsoft.Maui.Graphics.Skia;
+﻿//using Microsoft.Maui.Graphics.Skia;
 using Speakers.UI.Models;
 using System;
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace Speakers.UI.ViewModels
         private string requestId;
         private string firstName;
         private string lastName;
-        private string phoneNumber;
+        private string title;
         private string comments;
         private string photoPath;
         private string profilePictureFileName;
@@ -29,8 +29,22 @@ namespace Speakers.UI.ViewModels
         public Command SaveCommand { get; }
         public Command TakePhotoCommand { get; }
         public Command CancelCommand { get; }
-        public SpeakerViewModel()
+
+
+        public SpeakerViewModel(Speaker speaker = null)
         {
+            if (speaker != null)
+            {
+                this.SpeakerId = speaker.SpeakerId;
+                this.FirstName = speaker.FirstName;
+                this.LastName = speaker.LastName;
+                this.Title = speaker.Title;
+                this.ProfilePicture = speaker.ProfilePicture;
+                this.ProfilePictureFileName = speaker.ProfilePictureFileName;
+
+            }
+
+
             this.SaveCommand = new Command(OnSave, ValidateSave);
             this.CancelCommand = new Command(OnCancel);
             this.TakePhotoCommand = new Command(async () => await OnTakePhotoAsync());
@@ -61,6 +75,7 @@ namespace Speakers.UI.ViewModels
             return !String.IsNullOrWhiteSpace(firstName)
                 && !String.IsNullOrWhiteSpace(lastName);
         }
+    
         public string PhotoPath
         {
             get => photoPath;
@@ -88,10 +103,10 @@ namespace Speakers.UI.ViewModels
 
         public string FullName => $"{FirstName} {LastName}";
 
-        public string PhoneNumber
+        public string Title
         {
-            get => phoneNumber;
-            set => SetProperty(ref phoneNumber, value);
+            get => title;
+            set => SetProperty(ref title, value);
         }
         public string Comments
         {
@@ -112,6 +127,17 @@ namespace Speakers.UI.ViewModels
         {
             get => profilePictureFileName;
             set => SetProperty(ref profilePictureFileName, value);
+        }
+
+        public ImageSource ProfilePictureSource
+        {
+            get
+            {
+                var ms = new MemoryStream(ProfilePicture);
+                var imgSource = ImageSource.FromStream(() => ms);
+                return imgSource;
+                //return ImageSource.FromStream(() => new MemoryStream(ProfilePicture));
+            }
         }
 
         public async void LoadItemId(Guid speakerId)
@@ -140,11 +166,9 @@ namespace Speakers.UI.ViewModels
             this.SpeakerId = item.SpeakerId;
             this.FirstName = item.FirstName;
             this.LastName = item.LastName;
-            this.HireDate = item.HireDate;
+            this.Title = item.Title;
             this.ProfilePicture = item.ProfilePicture;
             this.ProfilePictureFileName = item.ProfilePictureFileName;
-            this.Comments = item.Comments;
-            this.PhoneNumber = item.PhoneNumber;
             this.PhotoPath = Path.Combine(FileSystem.CacheDirectory, ProfilePictureFileName);
 
             if (!File.Exists(this.PhotoPath))
@@ -175,9 +199,7 @@ namespace Speakers.UI.ViewModels
                 SpeakerId = SpeakerId,
                 FirstName = FirstName,
                 LastName = LastName,
-                HireDate = HireDate,
-                Comments = Comments,
-                PhoneNumber = PhoneNumber,
+                Title = Title,
                 ProfilePictureFileName = ProfilePictureFileName
             };
 
@@ -225,21 +247,21 @@ namespace Speakers.UI.ViewModels
             //var newFile2 = Path.Combine(FileSystem.CacheDirectory, "thumb.jpg");
 
 
-            //using (Stream sourceStream = await photo.OpenReadAsync())
-            //{
-            //    using FileStream localFileStream = File.OpenWrite(newFile);
-            //    await sourceStream.CopyToAsync(localFileStream);
-            //};
-
             using (Stream sourceStream = await photo.OpenReadAsync())
             {
-                using (var image = SkiaImage.FromStream(sourceStream))
-                {
-                    var newImage = image.Downsize(150);
-                    using FileStream localFileStream = File.OpenWrite(newFile);
-                    newImage.Save(localFileStream);
-                }
-            }
+                using FileStream localFileStream = File.OpenWrite(newFile);
+                await sourceStream.CopyToAsync(localFileStream);
+            };
+
+            //using (Stream sourceStream = await photo.OpenReadAsync())
+            //{
+            //    using (var image = SkiaImage.FromStream(sourceStream))
+            //    {
+            //        var newImage = image.Downsize(150);
+            //        using FileStream localFileStream = File.OpenWrite(newFile);
+            //        newImage.Save(localFileStream);
+            //    }
+            //}
 
             //Microsoft.Maui.Graphics.IImage image;
             //Assembly assembly = GetType().GetTypeInfo().Assembly;
