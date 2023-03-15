@@ -1,4 +1,5 @@
-﻿using Speakers.UI.Views;
+﻿using AppActions.Icons.Maui;
+using Speakers.UI.Views;
 using System.Windows.Input;
 
 namespace Speakers.UI
@@ -13,13 +14,14 @@ namespace Speakers.UI
             InitializeComponent();
             RegisterRoutes();
             BindingContext = this;
+            
         }
 
 
         private void RegisterRoutes()
         {
-            Routes.Add("speakers", typeof(SpeakersPage));
-            Routes.Add("speakerdetails", typeof(SpeakerDetails));
+            Routes.Add("Speakers", typeof(SpeakersPage));
+            Routes.Add("SpeakerEdit", typeof(SpeakerEdit));
 
             foreach (var item in Routes)
                 Routing.RegisterRoute(item.Key, item.Value);

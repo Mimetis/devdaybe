@@ -8,11 +8,8 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Speakers.UI.ViewModels
-{
-    [QueryProperty(nameof(RequestId), nameof(RequestId))]
-    public class SpeakerViewModel : BaseViewModel
-    {
+namespace Speakers.UI.ViewModels {
+    public class SpeakerViewModel : BaseViewModel {
         private Guid speakerId;
         private string requestId;
         private string firstName;
@@ -24,26 +21,19 @@ namespace Speakers.UI.ViewModels
         private byte[] profilePicture;
         private DateTime hireDate;
 
-        //public IImageResizer ImageResizer => DependencyService.Get<IImageResizer>();
-
         public Command SaveCommand { get; }
         public Command TakePhotoCommand { get; }
         public Command CancelCommand { get; }
 
-
-        public SpeakerViewModel(Speaker speaker = null)
-        {
-            if (speaker != null)
-            {
+        public SpeakerViewModel(Speaker speaker = null) {
+            if (speaker != null) {
                 this.SpeakerId = speaker.SpeakerId;
                 this.FirstName = speaker.FirstName;
                 this.LastName = speaker.LastName;
                 this.Title = speaker.Title;
                 this.ProfilePicture = speaker.ProfilePicture;
                 this.ProfilePictureFileName = speaker.ProfilePictureFileName;
-
             }
-
 
             this.SaveCommand = new Command(OnSave, ValidateSave);
             this.CancelCommand = new Command(OnCancel);
@@ -58,156 +48,55 @@ namespace Speakers.UI.ViewModels
 
         public bool IsNew { get; set; } = true;
 
-        public string RequestId
-        {
-            get
-            {
-                return requestId;
-            }
-            set
-            {
-                requestId = value;
-                LoadItemId(new Guid(value));
-            }
-        }
-        private bool ValidateSave()
-        {
+        private bool ValidateSave() {
             return !String.IsNullOrWhiteSpace(firstName)
                 && !String.IsNullOrWhiteSpace(lastName);
         }
-    
-        public string PhotoPath
-        {
-            get => photoPath;
-            set => SetProperty(ref photoPath, value);
 
-        }
-
-        public Guid SpeakerId
-        {
+        public Guid SpeakerId {
             get => speakerId;
             set => SetProperty(ref speakerId, value);
 
         }
-        public string FirstName
-        {
+        public string FirstName {
             get => firstName;
             set => SetProperty(ref firstName, value);
         }
 
-        public string LastName
-        {
+        public string LastName {
             get => lastName;
             set => SetProperty(ref lastName, value);
         }
 
         public string FullName => $"{FirstName} {LastName}";
 
-        public string Title
-        {
+        public string Title {
             get => title;
             set => SetProperty(ref title, value);
         }
-        public string Comments
-        {
-            get => comments;
-            set => SetProperty(ref comments, value);
-        }
-        public DateTime HireDate
-        {
-            get => hireDate;
-            set => SetProperty(ref hireDate, value);
-        }
-        public Byte[] ProfilePicture
-        {
+
+        public byte[] ProfilePicture {
             get => profilePicture;
             set => SetProperty(ref profilePicture, value);
         }
-        public string ProfilePictureFileName
-        {
+        public string ProfilePictureFileName {
             get => profilePictureFileName;
             set => SetProperty(ref profilePictureFileName, value);
         }
 
-        public ImageSource ProfilePictureSource
-        {
-            get
-            {
-                var ms = new MemoryStream(ProfilePicture);
-                var imgSource = ImageSource.FromStream(() => ms);
-                return imgSource;
-                //return ImageSource.FromStream(() => new MemoryStream(ProfilePicture));
-            }
-        }
-
-        public async void LoadItemId(Guid speakerId)
-        {
-            try
-            {
-                //var item = new Speaker { SpeakerId = speakerId };
-                Speaker item = null;
-                //var item = await DataStore.GetSpeakerAsync(speakerId);
-
-                this.IsNew = item == null;
-
-                if (!IsNew)
-                    await this.FillSpeakerAsync(item);
-                else
-                    this.SpeakerId = Guid.NewGuid();
-            }
-            catch (Exception)
-            {
-                Debug.WriteLine("Failed to Load Item");
-            }
-        }
-
-        public async Task FillSpeakerAsync(Speaker item)
-        {
-            this.SpeakerId = item.SpeakerId;
-            this.FirstName = item.FirstName;
-            this.LastName = item.LastName;
-            this.Title = item.Title;
-            this.ProfilePicture = item.ProfilePicture;
-            this.ProfilePictureFileName = item.ProfilePictureFileName;
-            this.PhotoPath = Path.Combine(FileSystem.CacheDirectory, ProfilePictureFileName);
-
-            if (!File.Exists(this.PhotoPath))
-            {
-                using (var writeStream = File.OpenWrite(PhotoPath))
-                {
-                    byte[] buffer = new byte[writeStream.Length];
-                    await writeStream.WriteAsync(this.ProfilePicture, 0, this.ProfilePicture.Length);
-                };
-
-            }
-
-            // no need byte picture array, since we have serialized the photo
-            this.ProfilePicture = null;
-        }
-
-
-        private async void OnCancel()
-        {
+        private async void OnCancel() {
             // This will pop the current page off the navigation stack
             await Shell.Current.GoToAsync("..");
         }
 
-        private async void OnSave()
-        {
-            Speaker newSpeaker = new Speaker()
-            {
+        private async void OnSave() {
+
+            Speaker newSpeaker = new Speaker() {
                 SpeakerId = SpeakerId,
                 FirstName = FirstName,
                 LastName = LastName,
                 Title = Title,
                 ProfilePictureFileName = ProfilePictureFileName
-            };
-
-            using (var readStream = File.OpenRead(PhotoPath))
-            {
-                byte[] buffer = new byte[readStream.Length];
-                await readStream.ReadAsync(buffer, 0, buffer.Length);
-                newSpeaker.ProfilePicture = buffer;
             };
 
             //if (IsNew)
@@ -219,24 +108,19 @@ namespace Speakers.UI.ViewModels
             await Shell.Current.GoToAsync("..");
         }
 
-        async Task OnTakePhotoAsync()
-        {
-            try
-            {
+        async Task OnTakePhotoAsync() {
+            try {
 
                 var photo = await MediaPicker.CapturePhotoAsync();
                 await SavePhotoToCacheAsync(photo);
-                Console.WriteLine($"CapturePhotoAsync COMPLETED: {PhotoPath}");
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 Console.WriteLine($"CapturePhotoAsync THREW: {ex.Message}");
             }
         }
 
 
-        async Task SavePhotoToCacheAsync(FileResult photo)
-        {
+        async Task SavePhotoToCacheAsync(FileResult photo) {
             // canceled
             if (photo == null)
                 return;
@@ -247,8 +131,7 @@ namespace Speakers.UI.ViewModels
             //var newFile2 = Path.Combine(FileSystem.CacheDirectory, "thumb.jpg");
 
 
-            using (Stream sourceStream = await photo.OpenReadAsync())
-            {
+            using (Stream sourceStream = await photo.OpenReadAsync()) {
                 using FileStream localFileStream = File.OpenWrite(newFile);
                 await sourceStream.CopyToAsync(localFileStream);
             };
@@ -277,8 +160,8 @@ namespace Speakers.UI.ViewModels
             //}
 
 
-            this.ProfilePictureFileName = photo.FileName;
-            this.PhotoPath = newFile;
+            //this.ProfilePictureFileName = photo.FileName;
+            //this.PhotoPath = newFile;
         }
     }
 

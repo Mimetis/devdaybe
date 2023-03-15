@@ -43,19 +43,19 @@
 
 	<ItemGroup>
 	  <None Remove="Platforms\Android\Resources\xml\network_security_config.xml" />
+	  <None Remove="Resources\Fonts\ionicons.ttf" />
 	  <None Remove="Resources\Images\details_place_holder.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="AppActions.Icons.Maui" Version="1.0.0" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="2.0.0" />
 		<PackageReference Include="Dotmim.Sync.Sqlite" Version="0.9.8" />
 		<PackageReference Include="Dotmim.Sync.Web.Client" Version="0.9.8" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Views\SpeakerDetails.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Views\SpeakerEdit.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

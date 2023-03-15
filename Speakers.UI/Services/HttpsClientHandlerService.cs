@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Speakers.UI.Services
 {
-    public class HttpsClientHandlerService
+    public static class HttpsClientHandlerService
     {
-        public HttpMessageHandler GetPlatformMessageHandler()
+        public static HttpMessageHandler GetPlatformMessageHandler()
         {
-            var t = 1;
 #if ANDROID
             var handler = new CustomAndroidMessageHandler
             {
@@ -23,24 +22,16 @@ namespace Speakers.UI.Services
             };
             return handler;
 #elif IOS
-        var handler = new NSUrlSessionHandler
-        {
-            TrustOverrideForUrl = IsHttpsLocalhost
-        };
-        return handler;
+            var handler = new NSUrlSessionHandler
+            {
+                TrustOverrideForUrl = (NSUrlSessionHandler sender, string url, Security.SecTrust trust) => url.Contains("localhost")
+            };
+            return handler;
 #else
      throw new PlatformNotSupportedException("Only Android and iOS supported.");
 #endif
         }
 
-#if IOS
-    public bool IsHttpsLocalhost(NSUrlSessionHandler sender, string url, Security.SecTrust trust)
-    {
-        if (url.StartsWith("https://localhost"))
-            return true;
-        return false;
-    }
-#endif
     }
 
 #if ANDROID

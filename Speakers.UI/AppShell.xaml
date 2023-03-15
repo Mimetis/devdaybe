@@ -4,22 +4,14 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Speakers.UI"
+    
     xmlns:views="clr-namespace:Speakers.UI.Views">
 
     
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
 
-        <ShellContent Title="Speakers"
+        <ShellContent Title="Speakers" 
                       ContentTemplate="{DataTemplate views:SpeakersPage}" />
-        <ShellContent Title="Details"
-                      ContentTemplate="{DataTemplate views:SpeakerDetails}" />
-        <ShellContent Title="Edit"
-                      ContentTemplate="{DataTemplate views:SpeakerEdit}" />
     </FlyoutItem>    
-    
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
 
 </Shell>

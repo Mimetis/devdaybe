@@ -1,8 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Speakers.UI.Services;
 using Speakers.UI.ViewModels;
 using Speakers.UI.Views;
+using System.IO;
 
 namespace Speakers.UI
 {
@@ -11,12 +14,24 @@ namespace Speakers.UI
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
+
+            var config = new ConfigurationBuilder()
+                        .AddInMemoryCollection(new Dictionary<string, string>
+                        {
+                            {"SpeakerApi" , "https://localhost:7170"}
+                        })
+                        .Build();
+
+            builder.Configuration.AddConfiguration(config);
+
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("ionicons.ttf", "ionicons");
                 });
 
             //#if DEBUG
@@ -25,36 +40,21 @@ namespace Speakers.UI
 
             builder.Services.AddHttpClient("api", c =>
             {
-                c.BaseAddress = new Uri("https://localhost:7170");
-            }).ConfigurePrimaryHttpMessageHandler(() =>
-            {
-                HttpsClientHandlerService handler = new();
-                // comments
-                return handler.GetPlatformMessageHandler();
-            });
+                var apiUriString = builder.Configuration["SpeakerApi"];
 
-            //builder.Services.AddHttpClient("localhost_android", c =>
-            //{
-            //    c.BaseAddress = new Uri("https://10.0.2.2:7170");
+                if (DeviceInfo.Platform == DevicePlatform.Android && apiUriString.Contains("localhost"))
+                {
+                    // Android specific uri to reach localhost
+                    apiUriString = apiUriString.Replace("localhost", "10.0.2.2");
+                    
+                    // Check if we are trying to reach a IIS Express.
+                    // IIS Express does not allow any request other than localhost
+                    // So far,hacking the Host-Content header to mimic localhost call
+                    c.DefaultRequestHeaders.Host = $"localhost:{new Uri(apiUriString).Port}";
+                }
+                c.BaseAddress = new Uri(apiUriString);
 
-            //    // Check if we are trying to reach a IIS Express.
-            //    // IIS Express does not allow any request other than localhost
-            //    // So far,hacking the Host-Content header to mimic localhost call
-
-            //    c.DefaultRequestHeaders.Host = $"localhost:7170";
-
-            //}).ConfigurePrimaryHttpMessageHandler(() =>
-            //{
-            //    HttpsClientHandlerService handler = new();
-            //    return handler.GetPlatformMessageHandler();
-            //});
-
-            builder.Services.AddHttpClient("localhost_android", c =>
-            {
-                c.BaseAddress = new Uri("https://devdaybe.servicebus.windows.net/localhost-https");
-
-                //c.DefaultRequestHeaders.Host = $"localhost:7170";
-            });
+            }).ConfigurePrimaryHttpMessageHandler(() => HttpsClientHandlerService.GetPlatformMessageHandler());
 
             builder.Services.AddSingleton<SpeakersViewModel>();
             builder.Services.AddTransient<SpeakersPage>();
