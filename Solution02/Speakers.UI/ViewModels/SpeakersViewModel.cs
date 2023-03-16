@@ -70,7 +70,7 @@ namespace Speakers.UI.ViewModels {
         public ICommand SyncCommand => new Command(() => {
             this.shouldSync = true;
             this.IsRefreshing = true;
-        });
+        }); 
 
         public bool ShouldSync => this.shouldSync;
 
@@ -89,10 +89,11 @@ namespace Speakers.UI.ViewModels {
             // this.Speakers.Clear(); // for demo purpose
 
             try {
-                if (shouldSync) {
+                if (shouldSync)
+                {
                     var syncResult = await syncAgent.SynchronizeAsync();
                     Debug.WriteLine(syncResult);
-                    this.shouldSync = false;
+                    this.shouldSync = false;    
                 }
 
                 var speakers = await speakersContext.Speakers.AsNoTracking().ToListAsync();

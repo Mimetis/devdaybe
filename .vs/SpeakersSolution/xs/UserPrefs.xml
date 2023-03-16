@@ -1,0 +1,45 @@
+﻿<Properties GitUserInfo="UsingGIT" StartupConfiguration="Multiple Projects">
+  <MonoDevelop.Ide.ItemProperties.Speakers.API PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations>
+    <MultiItemSolutionRunConfiguration Id="Multiple Projects" Name="Multiple Projects">
+      <Items>
+        <StartupItem ItemId="{EACBE460-934C-4529-85BB-EABA083CEDAF}" ItemName="Speakers.API" ConfigurationId="https" />
+        <StartupItem ItemId="{8752EAE1-4F33-4616-BDBA-CF2B2EBE290B}" ItemName="Speakers.UI" ConfigurationId="Default" />
+      </Items>
+    </MultiItemSolutionRunConfiguration>
+  </MultiItemStartupConfigurations>
+  <MonoDevelop.MonoDroid LastDeploySdkVersion="13.2.0.0" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Speakers.UI/Platforms/iOS/Program.cs">
+    <Files>
+      <File FileName="Speakers.UI/MauiProgram.cs" />
+      <File FileName="Speakers.UI/App.xaml" />
+      <File FileName="Speakers.UI/ViewModels/BaseViewModel.cs" />
+      <File FileName="Speakers.UI/Platforms/iOS/Program.cs" Line="13" Column="64" />
+      <File FileName="Speakers.UI/Platforms/iOS/AppDelegate.cs" />
+      <File FileName="Speakers.UI/Platforms/iOS/Info.plist" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="SpeakersSolution" expanded="True">
+            <Node name="Speakers.UI" expanded="True">
+              <Node name="Platforms" expanded="True">
+                <Node name="iOS" expanded="True">
+                  <Node name="Program.cs" selected="True" />
+                </Node>
+              </Node>
+              <Node name="ViewModels" expanded="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Speakers.UI Xamarin.HotReload.EntryPointException.Speakers.UI.HideInfoBar="True" PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
+  <Xamarin.Addins.Core.Project ActiveDebugTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+</Properties>
