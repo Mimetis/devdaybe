@@ -20,9 +20,8 @@ namespace Speakers.UI.ViewModels {
         private ProfilePictureWithPictureName profilePictureWithPictureName;
 
         public SpeakerViewModel(Speaker speaker = null) {
-            Debug.WriteLine("SpeakerViewModel ctor");
-            if (speaker != null) {
 
+            if (speaker != null) {
                 this.SpeakerId = speaker.SpeakerId;
                 this.FirstName = speaker.FirstName;
                 this.LastName = speaker.LastName;
