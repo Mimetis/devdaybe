@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,6 +24,7 @@ namespace Speakers.API.Controllers
 
         // GET: api/Speakers
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<Speaker>>> GetSpeaker()
         {
             return await _context.Speakers.ToListAsync();

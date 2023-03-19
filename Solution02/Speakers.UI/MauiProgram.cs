@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.LifecycleEvents;
 using Speakers.UI.Services;
 using Speakers.UI.ViewModels;
 using Speakers.UI.Views;
 using System.IO;
+using Microsoft.Identity.Client;
 
 namespace Speakers.UI {
     public static class MauiProgram {
@@ -17,10 +19,17 @@ namespace Speakers.UI {
                         .AddInMemoryCollection(new Dictionary<string, string>
                         {
 
+                            // Speaker API endpoints
                             {"SpeakerApi" , "https://localhost:7170"},
-                            {"SqliteFilePath", Path.Combine(FileSystem.AppDataDirectory, "devdaybelog.db")},
-                            {"SyncEndpoint", "api/sync"},
                             {"SpeakersEndpoint", "api/Speakers"},
+                            // Azure AD Authentication
+                            {"ClientId", "7c66175f-d9f2-47f2-90bf-bc7ce36ef91d" },
+                            {"Scopes" , "api://2118f8b6-2847-490c-9983-2b1f0f6fc9ef/access_as_user" },
+                            {"TenantId", "common" },
+                            // SQLite file path
+                            {"SqliteFilePath", Path.Combine(FileSystem.AppDataDirectory, "devdaybelog.db")},
+                            // Sync endpoint
+                            {"SyncEndpoint", "api/sync"},
 
                         })
                         .Build();
@@ -29,6 +38,15 @@ namespace Speakers.UI {
 
             builder
                 .UseMauiApp<App>()
+                .ConfigureLifecycleEvents(events => {
+#if ANDROID
+                    events.AddAndroid(platform => {
+                        platform.OnActivityResult((activity, rc, result, data) => {
+                            AuthenticationContinuationHelper.SetAuthenticationContinuationEventArgs(rc, result, data);
+                        });
+                    });
+#endif
+                })
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts => {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -56,6 +74,7 @@ namespace Speakers.UI {
             builder.Services.AddDbContext<SpeakersContext>(options =>
                 options.UseSqlite($"Filename={builder.Configuration["SqliteFilePath"]}"));
 
+            builder.Services.AddSingleton<AuthenticationService>();
             builder.Services.AddSingleton<SpeakersViewModel>();
             builder.Services.AddSingleton<SpeakerEditViewModel>();
             builder.Services.AddSingleton<SpeakersPage>();

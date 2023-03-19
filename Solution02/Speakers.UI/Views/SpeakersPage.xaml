@@ -14,12 +14,8 @@
         <toolkit:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
         <toolkit:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
     </ContentPage.Behaviors>
-    
-
     <ScrollView>
-
         <VerticalStackLayout BackgroundColor="#F2F2F2">
-
             <StackLayout Orientation="Horizontal" HorizontalOptions="End" >
                 <ImageButton Margin="0,0,10,0" Command="{Binding SyncCommand}" >
                     <ImageButton.Source>
@@ -31,6 +27,11 @@
                         <FontImageSource Glyph="&#xf2c7;" Color="DarkGray" FontFamily="{OnPlatform iOS=Ionicons, Android=ionicons.ttf#}" Size="32" />
                     </ImageButton.Source>
                 </ImageButton>
+                <ImageButton Margin="0,0,0,0" Command="{Binding AuthCommand}">
+                    <ImageButton.Source>
+                        <FontImageSource Glyph="&#xf3a0;" Color="DarkGray" FontFamily="{OnPlatform iOS=Ionicons, Android=ionicons.ttf#}" Size="32" />
+                    </ImageButton.Source>
+                </ImageButton>
                 <ImageButton Margin="0,0,0,0">
                     <ImageButton.Source>
                         <FontImageSource Glyph="&#xf397;" Color="DarkGray" FontFamily="{OnPlatform iOS=Ionicons, Android=ionicons.ttf#}" Size="32" />
@@ -38,7 +39,7 @@
                 </ImageButton>
             </StackLayout>
 
-                <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
+            <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
                 <ContentView>
                     <CollectionView ItemsSource="{Binding Speakers}" 
                                     IsEnabled="{Binding IsNotRefreshing}"
@@ -69,7 +70,7 @@
                                             </SwipeItem>
                                         </SwipeItems>
                                     </SwipeView.LeftItems>
-                            
+
                                     <Grid Padding="10">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="Auto" />
@@ -98,8 +99,8 @@
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
-                    </ContentView>
-                </RefreshView>  
+                </ContentView>
+            </RefreshView>
         </VerticalStackLayout>
     </ScrollView>
     <Shell.SearchHandler>

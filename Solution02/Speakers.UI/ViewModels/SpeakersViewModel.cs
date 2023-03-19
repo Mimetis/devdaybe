@@ -23,6 +23,7 @@ namespace Speakers.UI.ViewModels {
         private bool shouldSync;
         private SyncAgent syncAgent;
         private readonly SpeakersContext speakersContext;
+        private readonly AuthenticationService authenticationService;
 
         public ObservableCollection<SpeakerViewModel> Speakers { get; private set; } = new ObservableCollection<SpeakerViewModel>();
 
@@ -31,9 +32,7 @@ namespace Speakers.UI.ViewModels {
         public ICommand DeleteCommand => new Command<SpeakerViewModel>(RemoveSpeaker);
         public ICommand FavoriteCommand => new Command<SpeakerViewModel>(FavoriteSpeaker);
 
-        public SpeakersViewModel(IHttpClientFactory httpClientFactory, IConfiguration configuration, SpeakersContext speakersContext) {
-
-            Debug.WriteLine("SpeakersViewModel ctor");
+        public SpeakersViewModel(IHttpClientFactory httpClientFactory, IConfiguration configuration, SpeakersContext speakersContext, AuthenticationService authenticationService) {
 
             var httpClient = httpClientFactory.CreateClient("api");
             var syncUri = new Uri(httpClient.BaseAddress, configuration["SyncEndpoint"]);
@@ -42,7 +41,8 @@ namespace Speakers.UI.ViewModels {
 
             this.syncAgent = new SyncAgent(sqliteSyncProvider, webRemoteOrchestrator);
             this.speakersContext = speakersContext;
-            this.shouldSync = true;
+            this.authenticationService = authenticationService;
+            this.shouldSync = false;
         }
 
         void RemoveSpeaker(SpeakerViewModel speaker) {
@@ -82,6 +82,10 @@ namespace Speakers.UI.ViewModels {
         });
         public ICommand DisappearingCommand => new Command(() => {
             this.IsRefreshing = false;
+        });
+
+        public ICommand AuthCommand => new Command(async () => {
+            var token = this.authenticationService.GetAuthenticationTokenAsync();
         });
 
 
@@ -135,7 +139,6 @@ namespace Speakers.UI.ViewModels {
                                 speakerViewModel.FirstName = speaker.FirstName;
                                 speakerViewModel.LastName = speaker.LastName;
                                 speakerViewModel.Title = speaker.Title;
-                                //speakerViewModel.ProfilePictureWithPictureName = new() { ProfilePictureFileName = speaker.ProfilePictureFileName, ProfilePicture = speaker.ProfilePicture };
                             }
                             catch (Exception ex) {
                                 Debug.WriteLine(ex);
