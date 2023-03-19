@@ -23,6 +23,11 @@
                     <FontImageSource Glyph="&#xf3b1;" Color="DarkGray" FontFamily="{OnPlatform iOS=Ionicons, Android=ionicons.ttf#}"  />
                 </ImageButton.Source>
             </ImageButton>
+            <ImageButton Margin="0,0,0,0" Command="{Binding AuthCommand}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="&#xf3a0;" Color="DarkGray" FontFamily="{OnPlatform iOS=Ionicons, Android=ionicons.ttf#}" Size="32" />
+                </ImageButton.Source>
+            </ImageButton>
             <ImageButton Margin="0,0,10,0">
                 <ImageButton.Source>    
                     <FontImageSource Glyph="&#xf2c7;" Color="DarkGray" FontFamily="{OnPlatform iOS=Ionicons, Android=ionicons.ttf#}" Size="32" />
