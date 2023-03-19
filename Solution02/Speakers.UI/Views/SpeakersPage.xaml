@@ -16,7 +16,7 @@
     </ContentPage.Behaviors>
 
     <VerticalStackLayout BackgroundColor="#F2F2F2">
-
+        
         <StackLayout Orientation="Horizontal" HorizontalOptions="End" >
             <ImageButton Margin="0,0,10,0" Command="{Binding SyncCommand}" >
                 <ImageButton.Source>
@@ -26,6 +26,11 @@
             <ImageButton Margin="0,0,0,0" Command="{Binding AuthCommand}">
                 <ImageButton.Source>
                     <FontImageSource Glyph="&#xf3a0;" Color="DarkGray" FontFamily="{OnPlatform iOS=Ionicons, Android=ionicons.ttf#}" Size="32" />
+                </ImageButton.Source>
+            </ImageButton>
+            <ImageButton Margin="0,0,0,0" Command="{Binding LogoutCommand}">
+                <ImageButton.Source>
+                    <FontImageSource Glyph="&#xf406;" Color="DarkGray" FontFamily="{OnPlatform iOS=Ionicons, Android=ionicons.ttf#}" Size="32" />
                 </ImageButton.Source>
             </ImageButton>
             <ImageButton Margin="0,0,10,0">

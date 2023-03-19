@@ -68,6 +68,7 @@ namespace Speakers.UI {
                     c.DefaultRequestHeaders.Host = $"localhost:{new Uri(apiUriString).Port}";
                 }
                 c.BaseAddress = new Uri(apiUriString);
+                c.Timeout = TimeSpan.FromSeconds(10);
 
             }).ConfigurePrimaryHttpMessageHandler(() => HttpsClientHandlerService.GetPlatformMessageHandler());
 

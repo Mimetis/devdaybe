@@ -8,7 +8,7 @@ namespace Speakers.UI.Platforms.Android
     [IntentFilter(new[] { Intent.ActionView },
         Categories = new[] { Intent.CategoryBrowsable, Intent.CategoryDefault },
         DataHost = "auth",
-        DataScheme = "msal{client-id}")]
+        DataScheme = "msal7c66175f-d9f2-47f2-90bf-bc7ce36ef91d")]
     public class MsalActivity : BrowserTabActivity {
     }
 }

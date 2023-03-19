@@ -15,6 +15,7 @@ using System.Windows.Input;
 using Microsoft.Extensions.Configuration;
 using Speakers.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Http.Headers;
 
 namespace Speakers.UI.ViewModels
 {
@@ -24,6 +25,8 @@ namespace Speakers.UI.ViewModels
         private bool isRefreshing;
         private bool shouldSync;
         private SyncAgent syncAgent;
+        private AuthenticationToken token;
+        private HttpClient httpClient;
         private readonly SpeakersContext speakersContext;
         private readonly AuthenticationService authenticationService;
 
@@ -36,10 +39,12 @@ namespace Speakers.UI.ViewModels
 
         public SpeakersViewModel(IHttpClientFactory httpClientFactory, IConfiguration configuration, SpeakersContext speakersContext, AuthenticationService authenticationService) {
 
-            var httpClient = httpClientFactory.CreateClient("api");
+            this.httpClient = httpClientFactory.CreateClient("api");
 
             var syncUri = new Uri(httpClient.BaseAddress, configuration["SyncEndpoint"]);
             var webRemoteOrchestrator = new WebRemoteOrchestrator(syncUri.AbsoluteUri, client: httpClient);
+            webRemoteOrchestrator.SyncPolicy.RetryCount = 0;
+
             var sqliteSyncProvider = new SqliteSyncProvider(configuration["SqliteFilePath"]);
             this.syncAgent = new SyncAgent(sqliteSyncProvider, webRemoteOrchestrator);
 
@@ -96,7 +101,25 @@ namespace Speakers.UI.ViewModels
         });
 
         public ICommand AuthCommand => new Command(async () => {
-            var token = this.authenticationService.GetAuthenticationTokenAsync();
+            try {
+
+                this.token = await this.authenticationService.GetAuthenticationTokenAsync();
+                this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", this.token.AccessToken);
+                await App.Current.MainPage.DisplayAlert("Authentication", $"Hello {token.DisplayName}", "OK");
+            }
+            catch (Exception ex) {
+                await App.Current.MainPage.DisplayAlert("Auth Error", ex.Message, "OK");
+            }
+        });
+        public ICommand LogoutCommand => new Command(async () => {
+            try {
+
+                await this.authenticationService.LogoutAsync();
+                await App.Current.MainPage.DisplayAlert("Auth logout", "you are logout", "OK");
+            }
+            catch (Exception ex) {
+                await App.Current.MainPage.DisplayAlert("Auth Error", ex.Message, "OK");
+            }
         });
 
 
@@ -117,7 +140,7 @@ namespace Speakers.UI.ViewModels
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error getting speakers: {Error}", ex);
+                await App.Current.MainPage.DisplayAlert("Alert", ex.Message, "OK");
             }
 
             this.IsRefreshing = false;

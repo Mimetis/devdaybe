@@ -1,5 +1,6 @@
 ﻿using Dotmim.Sync;
 using Dotmim.Sync.Web.Server;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
@@ -8,6 +9,7 @@ namespace Speakers.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class SyncController : ControllerBase {
         private WebServerAgent webServerAgent;
         private readonly IWebHostEnvironment env;
