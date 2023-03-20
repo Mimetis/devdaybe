@@ -130,8 +130,7 @@ namespace Speakers.UI.ViewModels
                 if (shouldSync)
                 {
                     var syncResult = await syncAgent.SynchronizeAsync();
-                    Debug.WriteLine(syncResult);
-                    this.shouldSync = false;
+                    await App.Current.MainPage.DisplayAlert("Sync", syncResult.ToString(), "OK");
                 }
 
                 var speakers = await speakersContext.Speakers.AsNoTracking().ToListAsync();
@@ -143,6 +142,7 @@ namespace Speakers.UI.ViewModels
                 await App.Current.MainPage.DisplayAlert("Alert", ex.Message, "OK");
             }
 
+            this.shouldSync = false;
             this.IsRefreshing = false;
         }
 

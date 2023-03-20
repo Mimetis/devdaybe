@@ -21,10 +21,9 @@ namespace Speakers.API {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SpeakersContext")
                     ?? throw new InvalidOperationException("Connection string 'SpeakersContext' not found.")));
 
-
             // Add services to the container.
             builder.Services.AddMicrosoftIdentityWebApiAuthentication(builder.Configuration, "AzureAd")
-                        .EnableTokenAcquisitionToCallDownstreamApi()
+                            .EnableTokenAcquisitionToCallDownstreamApi()
                             .AddInMemoryTokenCaches();
 
             builder.Services.AddControllers();
@@ -34,10 +33,8 @@ namespace Speakers.API {
 
             // [Required]: Get a connection string to your server data source
             var connectionString = builder.Configuration.GetConnectionString("SpeakersContext");
-
-            var tables = new string[] { "Speakers" };
-
-            builder.Services.AddSyncServer<SqlSyncChangeTrackingProvider>(connectionString, tables);
+            var setup = new SyncSetup("Speakers");
+            builder.Services.AddSyncServer<SqlSyncChangeTrackingProvider>(connectionString, setup);
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
