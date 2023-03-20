@@ -49,10 +49,16 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="2.0.0" />
+		<PackageReference Include="Dotmim.Sync.Sqlite" Version="0.9.8" />
+		<PackageReference Include="Dotmim.Sync.Web.Client" Version="0.9.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.15" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Views\SpeakerEdit.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\SpeakersPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

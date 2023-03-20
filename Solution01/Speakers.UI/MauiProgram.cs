@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -6,6 +7,7 @@ using Microsoft.Maui.LifecycleEvents;
 using Speakers.UI.Services;
 using Speakers.UI.ViewModels;
 using Speakers.UI.Views;
+using System.IO;
 
 namespace Speakers.UI {
     public static class MauiProgram {
@@ -13,15 +15,18 @@ namespace Speakers.UI {
             var builder = MauiApp.CreateBuilder();
 
             var config = new ConfigurationBuilder()
-                        .AddInMemoryCollection(new Dictionary<string, string>
-                        {
+                .AddInMemoryCollection(new Dictionary<string, string>
+                {
 
-                            // Speaker API endpoints
-                            {"SpeakerApi" , "https://localhost:7170"},
-                            {"SpeakersEndpoint", "api/Speakers"},
+                    // Speaker API endpoints
+                    {"SpeakerApi" , "https://localhost:7170"},
+                    {"SpeakersEndpoint", "api/Speakers"},
+                    // SQLite file path & Sync endpoint
+                    {"SqliteFilePath", Path.Combine(FileSystem.AppDataDirectory, "devdaybelog.db")},
+                    {"SyncEndpoint", "api/sync"},
 
-                        })
-                        .Build();
+                })
+                .Build();
 
             builder.Configuration.AddConfiguration(config);
 
@@ -51,8 +56,15 @@ namespace Speakers.UI {
                 c.Timeout = TimeSpan.FromSeconds(10);
 
             }).ConfigurePrimaryHttpMessageHandler(() => HttpsClientHandlerService.GetPlatformMessageHandler());
+
+            builder.Services.AddDbContext<SpeakersContext>(options =>
+                options.UseSqlite($"Filename={builder.Configuration["SqliteFilePath"]}"));
+
             builder.Services.AddSingleton<SpeakersViewModel>();
+            builder.Services.AddSingleton<SpeakerEditViewModel>();
             builder.Services.AddSingleton<SpeakersPage>();
+            builder.Services.AddSingleton<SpeakerEdit>();
+
 
             return builder.Build();
         }
