@@ -7,16 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Speakers.UI.Services {
-    public class AuthenticationService {
+namespace Speakers.UI.Services
+{
+    public class AuthenticationService
+    {
         private IConfiguration configuration;
         private string clientId;
         private string[] scopes;
         private string tenantId;
         private IPublicClientApplication identityClient;
 
-        public IPublicClientApplication IdentityClient {
-            get {
+        public IPublicClientApplication IdentityClient
+        {
+            get
+            {
                 if (identityClient != null)
                     return identityClient;
 #if ANDROID
@@ -46,14 +50,16 @@ namespace Speakers.UI.Services {
 
 
 
-        public AuthenticationService(IConfiguration configuration) {
+        public AuthenticationService(IConfiguration configuration)
+        {
             this.configuration = configuration;
             this.clientId = configuration["ClientId"];
             this.scopes = new[] { configuration["Scopes"] };
             this.tenantId = configuration["TenantId"];
         }
 
-        public async Task<bool> LogoutAsync() {
+        public async Task<bool> LogoutAsync()
+        {
             var accounts = await IdentityClient.GetAccountsAsync();
 
             if (accounts == null)
@@ -69,36 +75,37 @@ namespace Speakers.UI.Services {
         }
 
 
-        public async Task<AuthenticationToken> GetAuthenticationTokenAsync() {
+        public async Task<AuthenticationToken> GetAuthenticationTokenAsync()
+        {
             var accounts = await IdentityClient.GetAccountsAsync();
 
             AuthenticationResult result = null;
             bool tryInteractiveLogin = false;
 
-            try {
+            try
+            {
                 result = await IdentityClient
                     .AcquireTokenSilent(this.scopes, accounts.FirstOrDefault())
                     .ExecuteAsync();
             }
-            catch (MsalUiRequiredException) {
+            catch (MsalUiRequiredException)
+            {
                 tryInteractiveLogin = true;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 Debug.WriteLine($"MSAL Silent Error: {ex.Message}");
             }
 
-            if (tryInteractiveLogin) {
-                try {
-                    result = await IdentityClient
-                        .AcquireTokenInteractive(this.scopes)
-                        .ExecuteAsync();
-                }
-                catch (Exception ex) {
-                    Debug.WriteLine($"MSAL Interactive Error: {ex.Message}");
-                }
+            if (tryInteractiveLogin)
+            {
+                result = await IdentityClient
+                    .AcquireTokenInteractive(this.scopes)
+                    .ExecuteAsync();
             }
 
-            return new AuthenticationToken {
+            return new AuthenticationToken
+            {
                 DisplayName = result?.Account?.Username ?? "",
                 ExpiresOn = result?.ExpiresOn ?? DateTimeOffset.MinValue,
                 AccessToken = result?.AccessToken ?? "",
@@ -107,7 +114,8 @@ namespace Speakers.UI.Services {
         }
     }
 
-    public class AuthenticationToken {
+    public class AuthenticationToken
+    {
         public string DisplayName { get; set; }
         public DateTimeOffset ExpiresOn { get; set; }
         public string AccessToken { get; set; }

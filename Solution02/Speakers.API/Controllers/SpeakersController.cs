@@ -13,6 +13,8 @@ namespace Speakers.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+
     public class SpeakersController : ControllerBase
     {
         private readonly SpeakersContext _context;
@@ -20,6 +22,21 @@ namespace Speakers.API.Controllers
         public SpeakersController(SpeakersContext context)
         {
             _context = context;
+        }
+
+        // GET: api/Speakers
+        [HttpGet("all")]
+        public async Task<ActionResult<IEnumerable<Speaker>>> GetSpeakersWithoutPhotos()
+        {
+            return await _context.Speakers.Select(s => new Speaker
+            {
+                SpeakerId = s.SpeakerId,
+                FirstName = s.FirstName,
+                LastName = s.LastName,
+                Description = s.Description,
+                Title = s.Title
+
+            }).ToListAsync();
         }
 
         // GET: api/Speakers
