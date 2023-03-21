@@ -17,7 +17,8 @@ namespace Speakers.UI {
                         {
 
                             // Speaker API endpoints
-                            {"SpeakerApi" , "https://localhost:7170"},
+                            {"SpeakerApi" , "http://localhost:5054"}, // https://localhost:7170 or http://localhost:5054
+                            {"SpeakerEndpoint", "api/Speaker"},
                             {"SpeakersEndpoint", "api/Speakers"},
 
                         })
@@ -51,6 +52,7 @@ namespace Speakers.UI {
                 c.Timeout = TimeSpan.FromSeconds(10);
 
             }).ConfigurePrimaryHttpMessageHandler(() => HttpsClientHandlerService.GetPlatformMessageHandler());
+
             builder.Services.AddSingleton<SpeakersViewModel>();
             builder.Services.AddSingleton<SpeakersPage>();
 

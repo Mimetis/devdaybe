@@ -16,9 +16,7 @@ namespace Speakers.UI.ViewModels {
         private HttpClient httpClient;
 
         public ObservableCollection<SpeakerViewModel> Speakers { get; private set; } = new ObservableCollection<SpeakerViewModel>();
-
         public ICommand RefreshCommand => new Command(async () => await RefreshAsync());
-
         public ICommand DeleteCommand => new Command<SpeakerViewModel>(RemoveSpeaker);
         public ICommand FavoriteCommand => new Command<SpeakerViewModel>(FavoriteSpeaker);
 
@@ -32,8 +30,6 @@ namespace Speakers.UI.ViewModels {
                 Speakers.Remove(speaker);
             }
         }
-
-
         void FavoriteSpeaker(SpeakerViewModel speaker) { }
 
         public bool IsRefreshing {
@@ -43,7 +39,6 @@ namespace Speakers.UI.ViewModels {
                 this.OnPropertyChanged("IsNotRefreshing");
             }
         }
-
 
         public bool IsNotRefreshing {
             get => !isRefreshing;
@@ -65,7 +60,6 @@ namespace Speakers.UI.ViewModels {
 
                 var speakers = await this.httpClient.GetFromJsonAsync<IEnumerable<Speaker>>("api/Speakers",
                     new JsonSerializerOptions(JsonSerializerDefaults.Web));
-
 
                 MergeObsevableCollectionWithIEnumerable(speakers);
             }
