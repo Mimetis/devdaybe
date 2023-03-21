@@ -22,7 +22,7 @@ namespace Speakers.UI {
                     {"SpeakerApi" , "https://localhost:7170"},
                     {"SpeakersEndpoint", "api/Speakers"},
                     // SQLite file path & Sync endpoint
-                    {"SqliteFilePath", Path.Combine(FileSystem.AppDataDirectory, "devdaybelog.db")},
+                    {"SqliteFilePath", Path.Combine(FileSystem.AppDataDirectory, "devdayblog.db")},
                     {"SyncEndpoint", "api/sync"},
 
                 })
@@ -53,7 +53,7 @@ namespace Speakers.UI {
                     c.DefaultRequestHeaders.Host = $"localhost:{new Uri(apiUriString).Port}";
                 }
                 c.BaseAddress = new Uri(apiUriString);
-                c.Timeout = TimeSpan.FromSeconds(10);
+                c.Timeout = TimeSpan.FromSeconds(2);
 
             }).ConfigurePrimaryHttpMessageHandler(() => HttpsClientHandlerService.GetPlatformMessageHandler());
 

@@ -40,10 +40,10 @@ namespace Speakers.UI.ViewModels
             this.httpClient = httpClientFactory.CreateClient("api");
 
             var syncUri = new Uri(httpClient.BaseAddress, configuration["SyncEndpoint"]);
-            var webRemoteOrchestrator = new WebRemoteOrchestrator(syncUri.AbsoluteUri, client: httpClient);
-            webRemoteOrchestrator.SyncPolicy.RetryCount = 0;
 
+            var webRemoteOrchestrator = new WebRemoteOrchestrator(syncUri.AbsoluteUri, client: httpClient);
             var sqliteSyncProvider = new SqliteSyncProvider(configuration["SqliteFilePath"]);
+
             this.syncAgent = new SyncAgent(sqliteSyncProvider, webRemoteOrchestrator);
 
             this.speakersContext = speakersContext;
