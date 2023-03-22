@@ -1,9 +1,14 @@
 ﻿using Android.App;
 using Android.Runtime;
+using System.Diagnostics;
 
 namespace Speakers.UI
 {
-    [Application]
+#if DEBUG
+    [Application(UsesCleartextTraffic = true, NetworkSecurityConfig = "@xml/network_security_config")]
+#else
+    [Application()]
+#endif
     public class MainApplication : MauiApplication
     {
         public MainApplication(IntPtr handle, JniHandleOwnership ownership)
